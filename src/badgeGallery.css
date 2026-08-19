@@ -54,6 +54,7 @@
   flex: 0 0 30px;
   align-self: center;
   box-sizing: border-box;
+  position: relative;
   min-width: 30px;
   min-height: 30px;
   width: 30px;
@@ -81,8 +82,13 @@
 
 .agentduel-badge-gallery-icon-button svg {
   display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
   width: 16px;
   height: 16px;
+  margin: 0;
+  transform: translate(-50%, -50%);
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;
