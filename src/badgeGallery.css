@@ -1,0 +1,244 @@
+.agentduel-badge-gallery {
+  position: relative;
+  min-width: 0;
+  color: var(--duel-text, #263142);
+  font-family: var(--duel-font-body, "Avenir Next", "PingFang SC", ui-sans-serif, system-ui, sans-serif);
+}
+
+.agentduel-badge-gallery-heading,
+.agentduel-badge-gallery-heading-copy,
+.agentduel-badge-gallery-actions,
+.agentduel-badge-gallery-subheading {
+  display: flex;
+  align-items: center;
+}
+
+.agentduel-badge-gallery-heading,
+.agentduel-badge-gallery-subheading {
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.agentduel-badge-gallery-heading {
+  min-height: 44px;
+  margin-bottom: 10px;
+}
+
+.agentduel-badge-gallery-heading-copy {
+  gap: 10px;
+}
+
+.agentduel-badge-gallery-heading h2,
+.agentduel-badge-gallery-subheading h3 {
+  margin: 0;
+  color: var(--duel-ink, #111827);
+}
+
+.agentduel-badge-gallery-heading h2 {
+  font-size: 22px;
+  line-height: 30px;
+}
+
+.agentduel-badge-gallery-heading > span,
+.agentduel-badge-gallery-subheading > span {
+  color: var(--duel-muted, #5b6472);
+  font: 12px/18px var(--duel-font-code, monospace);
+}
+
+.agentduel-badge-gallery-actions {
+  gap: 6px;
+}
+
+.agentduel-badge-gallery-actions button,
+.agentduel-badge-gallery-sortable > button {
+  padding: 5px 9px;
+  color: var(--duel-muted, #5b6472);
+  background: var(--duel-surface, #fff);
+  border: 1px solid var(--duel-line, #d8dee8);
+  border-radius: var(--duel-radius-xs, 4px);
+  cursor: pointer;
+  font: 600 12px/18px inherit;
+}
+
+.agentduel-badge-gallery-actions button:hover:not(:disabled),
+.agentduel-badge-gallery-sortable > button:hover:not(:disabled),
+.agentduel-badge-gallery-actions button:focus-visible,
+.agentduel-badge-gallery-sortable > button:focus-visible {
+  color: var(--duel-ink, #111827);
+  border-color: var(--duel-blue, #2563ff);
+}
+
+.agentduel-badge-gallery button:disabled {
+  cursor: wait;
+  opacity: .55;
+}
+
+.agentduel-badge-gallery-list {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+}
+
+.agentduel-badge-gallery-list.is-drop-zone {
+  min-height: 42px;
+  padding: 7px;
+  background: color-mix(in srgb, var(--duel-surface, #fff) 88%, transparent);
+  border: 1px dashed var(--duel-line, #d8dee8);
+  border-radius: var(--duel-radius-xs, 4px);
+  transition: background-color 120ms ease, border-color 120ms ease;
+}
+
+.agentduel-badge-gallery-list.is-drop-zone.is-over {
+  background: color-mix(in srgb, var(--duel-blue, #2563ff) 9%, var(--duel-surface, #fff));
+  border-color: var(--duel-blue, #2563ff);
+}
+
+.agentduel-badge-gallery-list.is-empty {
+  justify-content: center;
+}
+
+.agentduel-badge-gallery-empty,
+.agentduel-badge-gallery-hint {
+  margin: 0;
+  color: var(--duel-muted, #5b6472);
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.agentduel-badge-gallery-hint {
+  margin-top: 7px;
+}
+
+.agentduel-badge-gallery-sortable,
+.agentduel-badge-gallery-drag-handle,
+.agentduel-badge-gallery-overlay {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.agentduel-badge-gallery-sortable.is-dragging {
+  opacity: .3;
+}
+
+.agentduel-badge-gallery-drag-handle {
+  cursor: grab;
+  touch-action: none;
+}
+
+.agentduel-badge-gallery-overlay {
+  padding: 4px;
+  background: rgba(17, 24, 39, .1);
+  border-radius: 6px;
+  box-shadow: 0 10px 24px rgba(17, 24, 39, .2);
+}
+
+.agentduel-badge-gallery-item {
+  display: grid;
+  grid-template-columns: 24px max-content;
+  align-items: center;
+  width: max-content;
+  height: 26px;
+  overflow: hidden;
+  color: #725d2d;
+  background: #e7dcc1;
+  border: 1px solid #c9b277;
+  border-radius: 3px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .16);
+  cursor: help;
+}
+
+.agentduel-badge-gallery-item:focus-visible {
+  outline: 2px solid var(--duel-blue, #2563ff);
+  outline-offset: 2px;
+}
+
+.agentduel-badge-gallery-mark {
+  display: grid;
+  width: 24px;
+  height: 100%;
+  place-items: center;
+  overflow: hidden;
+  color: #725d2d;
+  background: linear-gradient(135deg, #ffe9a1, #c18b2d);
+}
+
+.agentduel-badge-gallery-mark:empty::before {
+  width: 6px;
+  height: 6px;
+  content: "";
+  border: 1px solid #6e4b10;
+  transform: rotate(45deg);
+}
+
+.agentduel-badge-gallery-mark img,
+.agentduel-badge-gallery-inline-svg {
+  display: grid;
+  width: 18px;
+  height: 18px;
+  place-items: center;
+}
+
+.agentduel-badge-gallery-mark img {
+  object-fit: contain;
+}
+
+.agentduel-badge-gallery-inline-svg > svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  color: inherit;
+  fill: currentColor !important;
+}
+
+.agentduel-badge-gallery-inline-svg > svg [fill]:not([fill="none"]) { fill: currentColor !important; }
+.agentduel-badge-gallery-inline-svg > svg [fill="none"] { fill: none !important; }
+.agentduel-badge-gallery-inline-svg > svg [stroke]:not([stroke="none"]) { stroke: currentColor !important; }
+
+.agentduel-badge-gallery-item > strong {
+  padding: 0 5px 0 4px;
+  color: #725d2d;
+  font-size: 10px;
+  line-height: 16px;
+  white-space: nowrap;
+}
+
+.agentduel-badge-gallery-hidden {
+  margin-top: 18px;
+}
+
+.agentduel-badge-gallery-subheading {
+  min-height: 32px;
+  margin-bottom: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--duel-line, #d8dee8);
+}
+
+.agentduel-badge-gallery-subheading h3 {
+  font-size: 15px;
+  line-height: 22px;
+}
+
+.agentduel-badge-gallery-error {
+  margin: 10px 0 0;
+  color: var(--duel-danger, #d92d3d);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+@media (max-width: 560px) {
+  .agentduel-badge-gallery-heading,
+  .agentduel-badge-gallery-heading-copy {
+    align-items: flex-start;
+  }
+
+  .agentduel-badge-gallery-heading-copy {
+    flex-direction: column;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .agentduel-badge-gallery-list.is-drop-zone { transition: none; }
+}

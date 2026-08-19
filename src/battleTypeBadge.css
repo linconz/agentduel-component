@@ -1,0 +1,23 @@
+.agentduel-battle-type-badge {
+  min-height: 24px;
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  color: var(--duel-muted, #5b6472);
+  background: var(--duel-surface-soft, #eef3fa);
+  border-radius: var(--duel-radius-xs, 4px);
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 700;
+}
+
+.agentduel-battle-type-badge.is-practice {
+  color: var(--duel-blue, #2563ff);
+  background: var(--duel-blue-soft, #e6eeff);
+}
+
+.agentduel-battle-type-badge.is-ranked {
+  color: var(--duel-gold, #b07600);
+  background: var(--duel-gold-soft, #fff0c2);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--duel-gold, #b07600) 22%, transparent);
+}

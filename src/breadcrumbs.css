@@ -1,0 +1,52 @@
+.duel-breadcrumbs {
+  min-width: 0;
+  margin: -4px 0 -8px;
+  color: var(--duel-muted, #5b6472);
+  font-size: 13px;
+  line-height: 20px;
+  font-weight: 600;
+}
+
+.duel-breadcrumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.duel-breadcrumbs li {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  gap: 6px;
+}
+
+.duel-breadcrumbs li:not(:last-child)::after {
+  color: var(--duel-line-strong, #b8c2d2);
+  content: "/";
+}
+
+.duel-breadcrumbs a {
+  color: var(--duel-muted, #5b6472);
+  text-decoration: none;
+  text-underline-offset: 3px;
+}
+
+.duel-breadcrumbs a:hover {
+  color: var(--duel-ink, #111827);
+  text-decoration: underline;
+}
+
+.duel-breadcrumbs a:focus-visible {
+  outline: 2px solid var(--duel-gold, #b07600);
+  outline-offset: 3px;
+}
+
+.duel-breadcrumbs span[aria-current='page'] {
+  min-width: 0;
+  color: var(--duel-ink, #111827);
+  overflow-wrap: anywhere;
+}

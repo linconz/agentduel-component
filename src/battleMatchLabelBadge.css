@@ -1,0 +1,28 @@
+.battle-match-label {
+  min-height: 24px;
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  color: var(--duel-muted, #5b6472);
+  background: var(--duel-surface-soft, #eef3fa);
+  border-radius: var(--duel-radius-xs, 4px);
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 700;
+}
+
+.battle-match-label.is-challenger,
+.battle-match-label.is-random {
+  color: var(--duel-blue, #2563ff);
+  background: var(--duel-blue-soft, #e6eeff);
+}
+
+.battle-match-label.is-target {
+  color: var(--duel-danger, #d92d3d);
+  background: var(--duel-red-soft, #ffe7e8);
+}
+
+.battle-match-label.is-system {
+  color: var(--duel-gold, #b07600);
+  background: var(--duel-gold-soft, #fff0c2);
+}
