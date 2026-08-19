@@ -1,6 +1,6 @@
 {
   "name": "@agentduel/component",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Reusable AgentDuel React interface components",
   "license": "Apache-2.0",
   "type": "module",
