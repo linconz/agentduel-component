@@ -40,10 +40,34 @@ describe('AgentDuel badge galleries', () => {
       labels,
       onSave: async () => undefined
     }));
-    expect(guest).toContain('First badge');
-    expect(guest).not.toContain('Second badge');
+    expect(guest).toContain('First');
+    expect(guest).not.toContain('Second');
     expect(owner).toContain('Edit');
     expect(owner).toContain('Visible to visitors');
+  });
+
+  it('shows the original styled metadata tooltip for guest and owner badges', () => {
+    const guest = render(createElement(AgentDuelBadgeGallery, { badges, labels }));
+    const guestBadge = screen.getByRole('article', { name: 'First' });
+
+    expect(guestBadge.getAttribute('title')).toBeNull();
+    fireEvent.mouseMove(guestBadge, { clientX: 120, clientY: 80 });
+    expect(screen.getByRole('tooltip').textContent).toContain('First badge');
+    expect(screen.getByRole('tooltip').textContent).toContain('2026');
+    fireEvent.mouseLeave(guestBadge);
+    expect(screen.queryByRole('tooltip')).toBeNull();
+
+    guest.unmount();
+    const owner = render(createElement(AgentDuelOwnedBadgeGallery, { badges, labels, onSave: async () => undefined }));
+    const ownerBadge = screen.getByRole('article', { name: 'First' });
+    fireEvent.focus(ownerBadge);
+    expect(screen.getByRole('tooltip').textContent).toContain('First badge');
+    fireEvent.mouseMove(screen.getByRole('article', { name: 'Second' }), { clientX: 180, clientY: 100 });
+    expect(screen.getAllByRole('tooltip')).toHaveLength(1);
+    expect(screen.getByRole('tooltip').textContent).toContain('Second badge');
+    fireEvent.mouseLeave(screen.getByRole('article', { name: 'Second' }));
+    expect(screen.queryByRole('tooltip')).toBeNull();
+    owner.unmount();
   });
 
   it('moves badge keys without mutating the saved draft', () => {

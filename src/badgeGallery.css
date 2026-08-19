@@ -1,6 +1,7 @@
 .agentduel-badge-gallery {
   position: relative;
   min-width: 0;
+  overflow: visible;
   color: var(--duel-text, #263142);
   font-family: var(--duel-font-body, "Avenir Next", "PingFang SC", ui-sans-serif, system-ui, sans-serif);
 }
@@ -183,18 +184,56 @@
 }
 
 .agentduel-badge-gallery-item {
+  position: relative;
   display: grid;
   grid-template-columns: 24px max-content;
   align-items: center;
   width: max-content;
   height: 26px;
-  overflow: hidden;
+  overflow: visible;
   color: #725d2d;
   background: #e7dcc1;
   border: 1px solid #c9b277;
   border-radius: 3px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, .16);
   cursor: help;
+}
+
+.agentduel-badge-gallery-tooltip {
+  position: fixed;
+  z-index: 1000;
+  display: grid;
+  gap: 2px;
+  width: max-content;
+  max-width: min(390px, calc(100vw - 120px));
+  padding: 7px 9px;
+  visibility: hidden;
+  color: #f7e5ae;
+  background: #0e0b05;
+  border: 1px solid #806321;
+  border-radius: 3px;
+  box-shadow: 0 9px 24px rgba(0, 0, 0, .42);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.5;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 80ms ease;
+}
+
+.agentduel-badge-gallery-tooltip-description,
+.agentduel-badge-gallery-tooltip-awarded-at {
+  display: block;
+}
+
+.agentduel-badge-gallery-tooltip-awarded-at {
+  color: #cbb77c;
+  font-size: 11px;
+}
+
+.agentduel-badge-gallery-tooltip.is-visible {
+  visibility: visible;
+  opacity: 1;
 }
 
 .agentduel-badge-gallery-item:focus-visible {
@@ -287,5 +326,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .agentduel-badge-gallery-list.is-drop-zone { transition: none; }
+  .agentduel-badge-gallery-list.is-drop-zone,
+  .agentduel-badge-gallery-tooltip { transition: none; }
 }

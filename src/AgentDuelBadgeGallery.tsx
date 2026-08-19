@@ -104,10 +104,34 @@ interface ContainerDragData {
 
 type BadgeDndData = BadgeDragData | ContainerDragData;
 
+interface BadgeTooltipState {
+  awardedAt: string;
+  description: string;
+  left: number;
+  ownerId: string;
+  top: number;
+}
+
+interface BadgeTooltipHandlers {
+  onHideTooltip(ownerId: string): void;
+  onShowTooltip(badge: AgentDuelBadge, ownerId: string, left: number, top: number): void;
+  tooltip: BadgeTooltipState | null;
+  tooltipId: string;
+}
+
 export function AgentDuelBadgeGallery({ badges, className, labels, locale = 'zh-CN' }: AgentDuelBadgeGalleryProps) {
   const titleId = useId();
+  const tooltipId = useId();
+  const [tooltip, setTooltip] = useState<BadgeTooltipState | null>(null);
   const visibleBadges = badges.filter((badge) => (badge as Partial<AgentDuelOwnedBadge>).is_hidden !== true);
   if (visibleBadges.length === 0) return null;
+
+  const tooltipHandlers: BadgeTooltipHandlers = {
+    tooltip,
+    tooltipId,
+    onShowTooltip: (badge, ownerId, left, top) => setTooltip({ ownerId, description: badge.description, awardedAt: badge.awarded_at, left, top }),
+    onHideTooltip: (ownerId) => setTooltip((current) => current?.ownerId === ownerId ? null : current)
+  };
 
   return (
     <section
@@ -115,7 +139,8 @@ export function AgentDuelBadgeGallery({ badges, className, labels, locale = 'zh-
       aria-labelledby={titleId}
     >
       <GalleryHeading count={visibleBadges.length} labels={labels} titleId={titleId} />
-      <BadgeList badges={visibleBadges} labels={labels} locale={locale} />
+      <BadgeList badges={visibleBadges} {...tooltipHandlers} />
+      <BadgeTooltip labels={labels} locale={locale} tooltip={tooltip} tooltipId={tooltipId} />
     </section>
   );
 }
@@ -129,12 +154,14 @@ export function AgentDuelOwnedBadgeGallery({
 }: AgentDuelOwnedBadgeGalleryProps) {
   const titleId = useId();
   const hiddenTitleId = useId();
+  const tooltipId = useId();
   const savedDraft = useMemo(() => createAgentDuelBadgeDisplayDraft(badges), [badges]);
   const [draft, setDraft] = useState<AgentDuelBadgeDisplayDraft>(savedDraft);
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [activeBadgeKey, setActiveBadgeKey] = useState<string | null>(null);
+  const [tooltip, setTooltip] = useState<BadgeTooltipState | null>(null);
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
@@ -150,6 +177,12 @@ export function AgentDuelOwnedBadgeGallery({
   const equippedBadges = orderBadges(badges, activeDraft.equippedBadgeKeys);
   const hiddenBadges = orderBadges(badges, activeDraft.hiddenBadgeKeys);
   const activeBadges = activeBadgeKey === null ? [] : badges.filter((badge) => badge.key === activeBadgeKey);
+  const tooltipHandlers: BadgeTooltipHandlers = {
+    tooltip,
+    tooltipId,
+    onShowTooltip: (badge, ownerId, left, top) => setTooltip({ ownerId, description: badge.description, awardedAt: badge.awarded_at, left, top }),
+    onHideTooltip: (ownerId) => setTooltip((current) => current?.ownerId === ownerId ? null : current)
+  };
   const announcements: Announcements = {
     onDragStart({ active }) {
       const data = readBadgeDragData(active.data.current);
@@ -177,6 +210,7 @@ export function AgentDuelOwnedBadgeGallery({
   function beginEditing(): void {
     setDraft(cloneDraft(savedDraft));
     setSaveError(null);
+    setTooltip(null);
     setIsEditing(true);
   }
 
@@ -184,16 +218,19 @@ export function AgentDuelOwnedBadgeGallery({
     setDraft(cloneDraft(savedDraft));
     setSaveError(null);
     setActiveBadgeKey(null);
+    setTooltip(null);
     setIsEditing(false);
   }
 
   function handleDragStart(event: DragStartEvent): void {
     setActiveBadgeKey(readBadgeDragData(event.active.data.current)?.badgeKey ?? null);
     setSaveError(null);
+    setTooltip(null);
   }
 
   function handleDragEnd(event: DragEndEvent): void {
     setActiveBadgeKey(null);
+    setTooltip(null);
     const activeData = readBadgeDragData(event.active.data.current);
     const destination = readContainer(event.over?.data.current);
     if (!activeData || !destination || isSaving) return;
@@ -267,7 +304,10 @@ export function AgentDuelOwnedBadgeGallery({
           }}
           collisionDetection={badgeCollisionDetection}
           sensors={sensors}
-          onDragCancel={() => setActiveBadgeKey(null)}
+          onDragCancel={() => {
+            setActiveBadgeKey(null);
+            setTooltip(null);
+          }}
           onDragEnd={handleDragEnd}
           onDragStart={handleDragStart}
         >
@@ -278,8 +318,8 @@ export function AgentDuelOwnedBadgeGallery({
             disabled={isSaving}
             emptyLabel={labels.equippedDropEmpty}
             labels={labels}
-            locale={locale}
             onMove={(badgeKey) => setDraft((current) => moveAgentDuelBadge(current, badgeKey, 'hidden'))}
+            {...tooltipHandlers}
           />
           <p className="agentduel-badge-gallery-hint">{labels.visitorHint}</p>
           <div className="agentduel-badge-gallery-hidden" aria-labelledby={hiddenTitleId}>
@@ -293,22 +333,22 @@ export function AgentDuelOwnedBadgeGallery({
               container="hidden"
               disabled={isSaving}
               emptyLabel={labels.hiddenDropEmpty}
-              labels={labels}
-              locale={locale}
-              onMove={(badgeKey) => setDraft((current) => moveAgentDuelBadge(current, badgeKey, 'equipped'))}
+            labels={labels}
+            onMove={(badgeKey) => setDraft((current) => moveAgentDuelBadge(current, badgeKey, 'equipped'))}
+            {...tooltipHandlers}
             />
           </div>
           <DragOverlay dropAnimation={null}>
             {activeBadges.length > 0 ? (
               <div className="agentduel-badge-gallery-overlay">
-                {activeBadges.map((badge) => <BadgeItem badge={badge} key={`${badge.key}:${badge.awarded_at}`} labels={labels} locale={locale} />)}
+                {activeBadges.map((badge) => <BadgeItem badge={badge} focusable={false} key={`${badge.key}:${badge.awarded_at}`} />)}
               </div>
             ) : null}
           </DragOverlay>
         </DndContext>
       ) : (
         <>
-          <BadgeList badges={equippedBadges} labels={labels} locale={locale} />
+          <BadgeList badges={equippedBadges} {...tooltipHandlers} />
           <p className="agentduel-badge-gallery-hint">{labels.visitorHint}</p>
           {hiddenBadges.length > 0 ? (
             <div className="agentduel-badge-gallery-hidden" aria-labelledby={hiddenTitleId}>
@@ -316,12 +356,13 @@ export function AgentDuelOwnedBadgeGallery({
                 <h3 id={hiddenTitleId}>{labels.hiddenTitle}</h3>
                 <span>{labels.count(hiddenBadges.length)}</span>
               </div>
-              <BadgeList badges={hiddenBadges} labels={labels} locale={locale} />
+              <BadgeList badges={hiddenBadges} {...tooltipHandlers} />
             </div>
           ) : null}
         </>
       )}
       {saveError ? <p className="agentduel-badge-gallery-error" role="alert">{saveError}</p> : null}
+      <BadgeTooltip labels={labels} locale={locale} tooltip={tooltip} tooltipId={tooltipId} />
     </section>
   );
 }
@@ -355,8 +396,11 @@ function EditableBadgeList({
   disabled,
   emptyLabel,
   labels,
-  locale,
-  onMove
+  onMove,
+  onHideTooltip,
+  onShowTooltip,
+  tooltip,
+  tooltipId
 }: {
   badges: readonly AgentDuelBadge[];
   badgeKeys: readonly string[];
@@ -364,8 +408,11 @@ function EditableBadgeList({
   disabled: boolean;
   emptyLabel: string;
   labels: AgentDuelOwnedBadgeGalleryLabels;
-  locale: string;
   onMove(badgeKey: string): void;
+  onHideTooltip(ownerId: string): void;
+  onShowTooltip(badge: AgentDuelBadge, ownerId: string, left: number, top: number): void;
+  tooltip: BadgeTooltipState | null;
+  tooltipId: string;
 }) {
   const { isOver, setNodeRef } = useDroppable({
     id: `badge-container:${container}`,
@@ -387,8 +434,11 @@ function EditableBadgeList({
             disabled={disabled}
             key={badgeKey}
             labels={labels}
-            locale={locale}
             onMove={() => onMove(badgeKey)}
+            onHideTooltip={onHideTooltip}
+            onShowTooltip={onShowTooltip}
+            tooltip={tooltip}
+            tooltipId={tooltipId}
           />
         ))}
       </SortableContext>
@@ -397,14 +447,17 @@ function EditableBadgeList({
   );
 }
 
-function SortableBadgeGroup({ badgeKey, badges, container, disabled, labels, locale, onMove }: {
+function SortableBadgeGroup({ badgeKey, badges, container, disabled, labels, onMove, onHideTooltip, onShowTooltip, tooltip, tooltipId }: {
   badgeKey: string;
   badges: readonly AgentDuelBadge[];
   container: AgentDuelBadgeDisplayContainer;
   disabled: boolean;
   labels: AgentDuelOwnedBadgeGalleryLabels;
-  locale: string;
   onMove(): void;
+  onHideTooltip(ownerId: string): void;
+  onShowTooltip(badge: AgentDuelBadge, ownerId: string, left: number, top: number): void;
+  tooltip: BadgeTooltipState | null;
+  tooltipId: string;
 }) {
   const representative = badges[0];
   const { attributes, isDragging, listeners, setNodeRef, transform, transition } = useSortable({
@@ -421,7 +474,7 @@ function SortableBadgeGroup({ badgeKey, badges, container, disabled, labels, loc
   return (
     <div className={`agentduel-badge-gallery-sortable${isDragging ? ' is-dragging' : ''}`} ref={setNodeRef} style={style}>
       <div {...attributes} {...listeners} className="agentduel-badge-gallery-drag-handle">
-        {badges.map((badge) => <BadgeItem badge={badge} key={`${badge.key}:${badge.awarded_at}`} labels={labels} locale={locale} />)}
+        {badges.map((badge) => <BadgeItem badge={badge} key={`${badge.key}:${badge.awarded_at}`} onHideTooltip={onHideTooltip} onShowTooltip={onShowTooltip} tooltip={tooltip} tooltipId={tooltipId} />)}
       </div>
       <button disabled={disabled} onClick={onMove} type="button">
         {container === 'equipped' ? labels.hide : labels.show}
@@ -430,22 +483,38 @@ function SortableBadgeGroup({ badgeKey, badges, container, disabled, labels, loc
   );
 }
 
-function BadgeList({ badges, labels, locale }: { badges: readonly AgentDuelBadge[]; labels: AgentDuelBadgeGalleryLabels; locale: string }) {
+function BadgeList({ badges, onHideTooltip, onShowTooltip, tooltip, tooltipId }: { badges: readonly AgentDuelBadge[] } & BadgeTooltipHandlers) {
   return (
     <div className="agentduel-badge-gallery-list">
-      {badges.map((badge) => <BadgeItem badge={badge} key={`${badge.key}:${badge.awarded_at}`} labels={labels} locale={locale} />)}
+      {badges.map((badge) => <BadgeItem badge={badge} key={`${badge.key}:${badge.awarded_at}`} onHideTooltip={onHideTooltip} onShowTooltip={onShowTooltip} tooltip={tooltip} tooltipId={tooltipId} />)}
     </div>
   );
 }
 
-function BadgeItem({ badge, labels, locale }: { badge: AgentDuelBadge; labels: AgentDuelBadgeGalleryLabels; locale: string }) {
-  const awardedAt = formatAwardedAt(badge.awarded_at, locale);
+function BadgeItem({ badge, focusable = true, onHideTooltip, onShowTooltip, tooltip, tooltipId }: {
+  badge: AgentDuelBadge;
+  focusable?: boolean;
+  onHideTooltip?(ownerId: string): void;
+  onShowTooltip?(badge: AgentDuelBadge, ownerId: string, left: number, top: number): void;
+  tooltip?: BadgeTooltipState | null;
+  tooltipId?: string;
+}) {
+  const ownerId = `${badge.key}:${badge.awarded_at}`;
+  const tooltipVisible = tooltip?.ownerId === ownerId;
   return (
     <article
-      aria-label={badge.name}
+      aria-describedby={tooltipVisible ? tooltipId : undefined}
+      aria-hidden={focusable ? undefined : true}
+      aria-label={focusable ? badge.name : undefined}
       className="agentduel-badge-gallery-item"
-      tabIndex={0}
-      title={`${badge.description}\n${labels.awardedAt(awardedAt)}`}
+      onBlur={focusable && onHideTooltip ? () => onHideTooltip(ownerId) : undefined}
+      onFocus={focusable && onShowTooltip ? (event) => {
+        const bounds = event.currentTarget.getBoundingClientRect();
+        onShowTooltip(badge, ownerId, bounds.right + 12, bounds.bottom + 12);
+      } : undefined}
+      onMouseLeave={focusable && onHideTooltip ? () => onHideTooltip(ownerId) : undefined}
+      onMouseMove={focusable && onShowTooltip ? (event) => onShowTooltip(badge, ownerId, event.clientX + 12, event.clientY + 12) : undefined}
+      tabIndex={focusable ? 0 : undefined}
     >
       <span className="agentduel-badge-gallery-mark" aria-hidden="true">
         {badge.icon_svg !== null ? (
@@ -454,6 +523,26 @@ function BadgeItem({ badge, labels, locale }: { badge: AgentDuelBadge; labels: A
       </span>
       <strong>{badge.name}</strong>
     </article>
+  );
+}
+
+function BadgeTooltip({ labels, locale, tooltip, tooltipId }: {
+  labels: AgentDuelBadgeGalleryLabels;
+  locale: string;
+  tooltip: BadgeTooltipState | null;
+  tooltipId: string;
+}) {
+  return (
+    <span
+      aria-hidden={tooltip === null}
+      className={`agentduel-badge-gallery-tooltip${tooltip === null ? '' : ' is-visible'}`}
+      id={tooltipId}
+      role="tooltip"
+      style={tooltip === null ? undefined : { left: tooltip.left, top: tooltip.top }}
+    >
+      <span className="agentduel-badge-gallery-tooltip-description">{tooltip?.description ?? ''}</span>
+      <span className="agentduel-badge-gallery-tooltip-awarded-at">{tooltip === null ? '' : labels.awardedAt(formatAwardedAt(tooltip.awardedAt, locale))}</span>
+    </span>
   );
 }
 
