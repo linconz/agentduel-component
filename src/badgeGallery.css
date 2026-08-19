@@ -49,6 +49,40 @@
   gap: 6px;
 }
 
+.agentduel-badge-gallery-icon-button {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  place-items: center;
+  color: var(--duel-muted, #5b6472);
+  background: var(--duel-surface, #fff);
+  border: 1px solid var(--duel-line, #d8dee8);
+  border-radius: var(--duel-radius-xs, 4px);
+  cursor: pointer;
+}
+
+.agentduel-badge-gallery-icon-button:hover:not(:disabled),
+.agentduel-badge-gallery-icon-button:focus-visible {
+  color: var(--duel-ink, #111827);
+  border-color: var(--duel-line-strong, #aab4c3);
+}
+
+.agentduel-badge-gallery-icon-button:focus-visible {
+  outline: 2px solid var(--duel-blue, #2563ff);
+  outline-offset: 2px;
+}
+
+.agentduel-badge-gallery-icon-button svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
 .agentduel-badge-gallery-actions button,
 .agentduel-badge-gallery-sortable > button {
   padding: 5px 9px;

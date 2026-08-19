@@ -244,7 +244,15 @@ export function AgentDuelOwnedBadgeGallery({
                 <button disabled={isSaving} onClick={cancelEditing} type="button">{labels.cancel}</button>
               </>
             ) : (
-              <button onClick={beginEditing} type="button">{labels.edit}</button>
+              <button
+                aria-label={labels.edit}
+                className="agentduel-badge-gallery-icon-button"
+                onClick={beginEditing}
+                title={labels.edit}
+                type="button"
+              >
+                <PencilIcon />
+              </button>
             )}
           </div>
         </div>
@@ -315,6 +323,15 @@ export function AgentDuelOwnedBadgeGallery({
       )}
       {saveError ? <p className="agentduel-badge-gallery-error" role="alert">{saveError}</p> : null}
     </section>
+  );
+}
+
+function PencilIcon() {
+  return (
+    <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+      <path d="M4 20h4l11-11-4-4L4 16v4Z" />
+      <path d="m14 6 4 4" />
+    </svg>
   );
 }
 
