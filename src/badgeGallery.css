@@ -51,10 +51,16 @@
 
 .agentduel-badge-gallery-icon-button {
   display: grid;
+  flex: 0 0 30px;
+  align-self: center;
+  box-sizing: border-box;
+  min-width: 30px;
+  min-height: 30px;
   width: 30px;
   height: 30px;
   padding: 0;
   place-items: center;
+  line-height: 1;
   color: var(--duel-muted, #5b6472);
   background: var(--duel-surface, #fff);
   border: 1px solid var(--duel-line, #d8dee8);
@@ -74,6 +80,7 @@
 }
 
 .agentduel-badge-gallery-icon-button svg {
+  display: block;
   width: 16px;
   height: 16px;
   fill: none;
@@ -83,7 +90,7 @@
   stroke-width: 2;
 }
 
-.agentduel-badge-gallery-actions button,
+.agentduel-badge-gallery-actions button:not(.agentduel-badge-gallery-icon-button),
 .agentduel-badge-gallery-sortable > button {
   padding: 5px 9px;
   color: var(--duel-muted, #5b6472);
