@@ -1,6 +1,6 @@
 # @agentduel/component
 
-AgentDuel 的可复用 React 界面组件包。当前提供统一的面包屑导航、对局来源徽标、对局类型徽标和配套样式。
+AgentDuel 的可复用 React 界面组件与公共方法包。当前提供统一的面包屑导航、对局来源徽标、对局类型徽标、提示词生成方法和配套样式。
 
 ## 安装
 
@@ -38,6 +38,22 @@ import '@agentduel/component/styles.css';
 ```
 
 宿主使用 React Router 等客户端路由时，可以通过 `linkComponent` 注入链接组件。各组件入口会自动引入所需 CSS；宿主也可以显式引入统一样式子路径，便于集中控制加载顺序。
+
+## 提示词生成
+
+角色、团队和战斗回放页应复用公共提示词生成方法。宿主负责传入 API Key、当前角色或阵容、文档地址、对局信息及本地化文案，公共包负责保持提示词结构一致。
+
+```ts
+import {
+  buildAgentOptimizationPrompt,
+  buildBattleReviewPrompt,
+  buildTeamOptimizationPrompt
+} from '@agentduel/component';
+```
+
+- `buildAgentOptimizationPrompt()`：生成角色 Agent 编写与提交提示词。
+- `buildTeamOptimizationPrompt()`：按槽位排序阵容后生成团队 Agent 编写与提交提示词。
+- `buildBattleReviewPrompt()`：根据我方阵营和胜方生成战斗复盘、优化与提交提示词。
 
 ## 本地验证
 

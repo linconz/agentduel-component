@@ -40,3 +40,22 @@ export {
   createAgentDuelBadgeDisplayDraft,
   moveAgentDuelBadge
 } from './badgeDisplay';
+export {
+  buildAgentOptimizationPrompt,
+  buildBattleReviewPrompt,
+  buildTeamOptimizationPrompt,
+  getBattleReviewPromptResult
+} from './promptBuilders';
+export type {
+  AgentOptimizationPromptInput,
+  AgentOptimizationPromptMessages,
+  BattleReviewPromptAnalysis,
+  BattleReviewPromptInput,
+  BattleReviewPromptMessages,
+  BattleReviewPromptResult,
+  BattleReviewPromptSide,
+  BattleReviewPromptWinnerSide,
+  TeamOptimizationPromptInput,
+  TeamOptimizationPromptMessages,
+  TeamOptimizationPromptUnit
+} from './promptBuilders';
