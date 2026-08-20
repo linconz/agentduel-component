@@ -4,6 +4,7 @@ export {
 } from './AgentDuelBreadcrumbs';
 export { AgentDuelBattleMatchLabelBadge } from './AgentDuelBattleMatchLabelBadge';
 export { AgentDuelBattleTypeBadge } from './AgentDuelBattleTypeBadge';
+export { AgentDuelAiModelLogoBadge } from './AgentDuelAiModelLogoBadge';
 export { AgentDuelBadgeGallery, AgentDuelOwnedBadgeGallery } from './AgentDuelBadgeGallery';
 export type {
   AgentDuelBreadcrumbItem,
@@ -15,6 +16,18 @@ export type {
   BreadcrumbLinkProps,
   BreadcrumbsProps
 } from './AgentDuelBreadcrumbs';
+export type {
+  AgentDuelAiModelLogoBadgeProps
+} from './AgentDuelAiModelLogoBadge';
+export type {
+  AgentDuelAiModelLogo,
+  AgentDuelAiModelLogoBrand
+} from './aiModelLogos';
+export {
+  AGENTDUEL_AI_MODEL_LOGOS,
+  getAgentDuelAiModelLogo,
+  getAgentDuelAiModelLogoAssetUrl
+} from './aiModelLogos';
 export type {
   AgentDuelBattleMatchLabelBadgeProps,
   AgentDuelBattleMatchLabelTone

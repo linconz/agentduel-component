@@ -8,9 +8,12 @@ export default defineConfig({
   build: {
     emptyOutDir: false,
     lib: {
-      entry: resolve(import.meta.dirname, 'src/index.ts'),
+      entry: {
+        index: resolve(import.meta.dirname, 'src/index.ts'),
+        'ai-model-logos': resolve(import.meta.dirname, 'src/aiModelLogos.ts')
+      },
       formats: ['es'],
-      fileName: 'index',
+      fileName: (_format, entryName) => `${entryName}.js`,
       cssFileName: 'agentduel-component'
     },
     rollupOptions: {

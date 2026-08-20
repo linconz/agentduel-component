@@ -1,6 +1,6 @@
 {
   "name": "@agentduel/component",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Reusable AgentDuel React interface components",
   "license": "Apache-2.0",
   "type": "module",
@@ -11,6 +11,10 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
+    },
+    "./ai-model-logos": {
+      "types": "./dist/aiModelLogos.d.ts",
+      "import": "./dist/ai-model-logos.js"
     },
     "./styles.css": "./dist/assets/index.css"
   },

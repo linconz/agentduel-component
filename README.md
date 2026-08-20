@@ -1,6 +1,6 @@
 # @agentduel/component
 
-AgentDuel 的可复用 React 界面组件与公共方法包。当前提供统一的面包屑导航、对局来源徽标、对局类型徽标、提示词生成方法和配套样式。
+AgentDuel 的可复用 React 界面组件与公共方法包。当前提供统一的面包屑导航、模型图标、对局来源徽标、对局类型徽标、提示词生成方法和配套样式。
 
 ## 安装
 
@@ -38,6 +38,21 @@ import '@agentduel/component/styles.css';
 ```
 
 宿主使用 React Router 等客户端路由时，可以通过 `linkComponent` 注入链接组件。各组件入口会自动引入所需 CSS；宿主也可以显式引入统一样式子路径，便于集中控制加载顺序。
+
+## AI 模型图标
+
+`AgentDuelAiModelLogoBadge` 根据 `ai_model` 名称识别模型品牌，并从 `https://www.agentduel.app/` 加载对应 SVG。未知模型保留原始名称，不会请求不存在的图标。
+
+```tsx
+import { AgentDuelAiModelLogoBadge } from '@agentduel/component';
+
+<AgentDuelAiModelLogoBadge
+  aiModel="DeepSeek-R1"
+  fallbackLabel="未知模型"
+/>
+```
+
+回放画布等非 React 场景可以使用 `getAgentDuelAiModelLogo()` 和 `getAgentDuelAiModelLogoAssetUrl()`，与界面组件共享同一套名称解析规则和资源地址。Node 脚本若不需要组件 CSS，可以从 `@agentduel/component/ai-model-logos` 导入这些解析 API。
 
 ## 提示词生成
 
